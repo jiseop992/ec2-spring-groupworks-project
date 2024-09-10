@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TodoMapper">
+
+   	<!-- 할일조회 -->
+ 	<select id="list" resultType="TodoVo">
+ 	  	SELECT 
+ 	  		NO
+ 	  		,MEMBER_NO
+ 	  		,CONTENT
+ 	  		,TO_CHAR(WRITE_DATE, 'YYYY-MM-DD') AS WRITE_DATE
+ 	  		,MODIFY_DATE
+		FROM TODO 
+		WHERE DEL_YN = 'N'
+		AND MEMBER_NO = #{memberNo}
+		ORDER BY NO DESC
+ 	</select>
+	 
+   	<!-- 할일등록 -->
+ 	<insert id="insert">
+ 		INSERT INTO TODO 
+	 	(
+	 		NO
+	 		,MEMBER_NO
+	 		,CONTENT
+	 		,WRITE_DATE
+	 	) 
+		VALUES 
+		(
+		    SEQ_TODO_NO.NEXTVAL
+		    ,#{memberNo}
+		    ,#{content}
+			,SYSDATE
+		)
+ 	</insert>
+ 	
+ 	<!-- 할일수정 -->
+ 	<update id="edit">
+	   UPDATE TODO 
+		    SET 
+		    CONTENT = #{content}
+		    , MODIFY_DATE = SYSDATE 
+	    WHERE NO = #{no} 
+	    AND DEL_YN = 'N'
+<!-- 	    AND MEMBER_NO = #{memberNo}; -->
+ 	</update>
+
+ 	<!-- 할일삭제 -->
+ 	<update id="delete">
+ 		UPDATE TODO 
+		    SET DEL_YN = 'Y'
+		    , DELETE_DATE = SYSDATE 
+	    WHERE NO = #{no}
+	    AND MEMBER_NO = #{memberNo}  
+ 	</update>
+ 
+</mapper>
