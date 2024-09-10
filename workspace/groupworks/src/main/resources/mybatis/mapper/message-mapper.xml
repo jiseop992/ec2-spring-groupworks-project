@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessageMapper">
+   
+   
+   <!-- 수신가능자리스트 조회 -->
+   <select id="list" resultType="MessageVo">
+   	   SELECT
+   	   	  사용자번호, 이름, 직책, 부서 
+   	   	  group by 회사 (회사같은사람들끼리만)
+   	   FROM 
+   </select>
+   
+   <!-- 보낸메세지 조회 -->
+   <select id="sendList" resultType="MessageVo">
+	   SELECT 
+	   		NO
+	   		, MEMBER_NO
+	   		, SEND_NO
+	   		, RECIEVE_NO
+	   		, CONTENT
+	   		, SEND_DATE
+	   FROM MESSAGE 
+	   WHERE DEL_YN = 'N' 
+	   AND SEND_NO = #{memberNo}
+   </select>
+   
+    <!-- 받은메세지 조회 -->
+   <select id="recieveList" resultType="MessageVo">
+	   SELECT 
+	   		NO
+	   		, MEMBER_NO
+	   		, SEND_NO
+	   		, RECIEVE_NO
+	   		, CONTENT
+	   		, SEND_DATE
+	   FROM MESSAGE 
+	   WHERE DEL_YN = 'N' 
+	   AND RECIEVE_NO = #{memberNo}
+   </select>
+   
+    <!-- 메세지보내기 -->
+ 	<insert id="insert">
+ 		INSERT INTO MESSAGE 
+ 		(
+ 			NO
+ 			,SEND_NO
+ 			,RECIEVE_NO
+ 			,CONTENT
+ 			,SEND_DATE
+ 		) 
+    	VALUES 
+   		(
+    		SEQ_MESSAGE_NO.NEXTVAL
+    		, #{sendNo}
+    		, #{recieveNo}
+    		, #{content}
+    		, SYSDATE
+   		)
+ 	</insert>
+ 	
+ 	 <!-- 메세지답장 -->
+ 	<insert id="reInsert">
+	 	INSERT INTO MESSAGE 
+	 	(
+	 		NO
+	 		,SEND_NO
+	 		,RECIEVE_NO
+	 		,CONTENT
+	 		,SEND_DATE
+	 	) 
+		VALUES 
+		(
+	    	SEQ_MESSAGE_NO.NEXTVAL
+	    	,#{recieveNo}
+	    	,#{sendNo}
+	    	,#{content}
+	    	,SYSDATE
+	    )
+ 	</insert>
+ 	
+ 	<!-- 메세지삭제 -->
+ 	<update id="delete">
+ 		UPDATE MESSAGE 
+		    SET DEL_YN = 'Y'
+		    , DELETE_DATE = SYSDATE 
+	    WHERE NO = #{no} 
+	    AND MEMBER_NO = #{memberNo};
+ 	</update>
+ 	
+ 	
+</mapper>

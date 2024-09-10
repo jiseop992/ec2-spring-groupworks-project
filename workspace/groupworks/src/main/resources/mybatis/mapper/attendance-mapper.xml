@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AttendanceMapper">
+
+    <!-- 출장 등록 -->
+    <insert id="insertBusinessTrip">
+        INSERT INTO BUSINESS_TRIP
+        (
+            NO
+            , MEMBER_NO
+            , START_DATE
+            , END_DATE
+            , MEMO
+        )
+        VALUES
+        (
+            SEQ_BUSINESS_TRIP_NO.NEXTVAL
+            , #{memberNo}
+            , #{startDate}
+            , #{endDate}
+            , #{memo}
+        )
+    </insert>
+
+    <!-- 출장 수정 -->
+    <update id="editBusinessTrip">
+        UPDATE BUSINESS_TRIP
+        <set>
+            <if test="startDate != null">
+                START_DATE = #{startDate} ,
+                END_DATE = #{endDate},
+            </if>
+            <if test="memo != null">
+                MEMO = #{memo}
+            </if>
+        </set>
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 출장 삭제 -->
+    <update id="deleteBusinessTrip">
+        UPDATE BUSINESS_TRIP
+        SET
+        DEL_YN = 'Y'
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 외근 등록 -->
+    <insert id="insertOutsideWork">
+        INSERT INTO OUTSIDE_WORK
+        (
+        NO
+        , MEMBER_NO
+        , START_TIME
+        , END_TIME
+            <if test=" onsiteStart != null and onsiteStart != '' ">
+                , ONSITE_START
+            </if>
+            <if test=" onsiteEnd != null and onsiteEnd != '' ">
+                , ONSITE_END
+            </if>
+        )
+        VALUES
+        (
+        SEQ_OUTSIDE_WORK_NO.NEXTVAL
+        , #{memberNo}
+        , #{startTime}
+        , #{endTime}
+            <if test=" onsiteStart != null and onsiteStart != '' ">
+                , #{onsiteStart}
+            </if>
+            <if test=" onsiteEnd != null and onsiteEnd != '' ">
+                , #{onsiteEnd}
+            </if>
+        )
+    </insert>
+
+    <!-- 외근 수정 -->
+    <update id="editOutsideWork">
+        UPDATE OUTSIDE_WORK
+        <set>
+            <if test="startTime != null">
+                START_TIME = #{startTime},
+                END_TIME = #{endTime},
+            </if>
+            <if test=" onsiteStart != null and onsiteStart != '' ">
+                ONSITE_START = #{onsiteStart},
+            </if>
+            <if test=" onsiteEnd != null and onsiteEnd != '' ">
+                ONSITE_END = #{onsiteEnd}
+            </if>
+        </set>
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 외근 삭제 -->
+    <update id="deleteOutsideWork">
+        UPDATE OUTSIDE_WORK
+        SET
+        DEL_YN = 'Y'
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 휴가 등록 -->
+    <insert id="insertVacation">
+        INSERT INTO VACATION
+        (
+        NO
+        , MEMBER_NO
+        , START_DATE
+        , END_DATE
+        , USED_DAYS
+        , HALF_DAY_TYPE
+        )
+        VALUES
+        (
+        SEQ_VACATION_NO.NEXTVAL
+        , #{memberNo}
+        , #{startDate}
+        , #{endDate}
+        , #{usedDays}
+        , #{halfDayType}
+        )
+    </insert>
+
+     <!-- 연차일수 삭감 -->
+    <update id="cutAnnual" >
+        UPDATE MEMBER
+        SET
+        ANNUAL = ANNUAL - #{usedDays}
+        WHERE NO = #{memberNo}
+    </update>
+
+    <!-- 휴가 수정 -->
+    <update id="editVacation">
+        UPDATE VACATION
+        <set>
+            START_DATE = #{startDate},
+            END_DATE = #{endDate},
+            USED_DAYS = #{usedDays}
+            <if test=" halfDayType != null and halfDayType != '' ">
+                HALF_DAY_TYPE = #{halfDayType}
+            </if>
+        </set>
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 휴가 삭제 -->
+    <update id="deleteVacation">
+        UPDATE VACATION
+        SET
+            DEL_YN = 'Y'
+        WHERE NO = #{no}
+    </update>
+
+    <!-- 출장 리스트 -->
+    <select id="getBusinessTripList" resultType="BusinessTripVo">
+        SELECT
+        NO
+        ,MEMBER_NO
+        ,START_DATE
+        ,END_DATE
+        ,MEMO
+        FROM BUSINESS_TRIP
+        WHERE MEMBER_NO = #{no}
+        AND DEL_YN = 'N'
+    </select>
+
+    <!-- 외근 리스트 -->
+    <select id="getOutsideWorkList" resultType="OutsideWorkVo">
+        SELECT
+        NO
+        , MEMBER_NO
+        , START_TIME
+        , END_TIME
+        , ONSITE_START
+        , ONSITE_END
+        FROM OUTSIDE_WORK
+        WHERE MEMBER_NO = #{no}
+        AND DEL_YN = 'N'
+    </select>
+
+    <!-- 휴가 리스트 -->
+    <select id="getVacationList" resultType="VacationVo">
+        SELECT
+        NO
+        ,MEMBER_NO
+        ,START_DATE
+        ,END_DATE
+        ,USED_DAYS
+        ,HALF_DAY_TYPE
+        FROM VACATION
+        WHERE MEMBER_NO = #{no}
+        AND DEL_YN = 'N'
+    </select>
+
+    <select id="getUsedAnnualDays" resultType="VacationVo">
+        SELECT
+            SUM(USED_DAYS) AS USED_DAYS
+        FROM VACATION
+        WHERE MEMBER_NO = #{no}
+    </select>
+</mapper>
