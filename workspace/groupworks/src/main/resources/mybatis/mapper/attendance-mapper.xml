@@ -18,8 +18,8 @@
         (
             SEQ_BUSINESS_TRIP_NO.NEXTVAL
             , #{memberNo}
-            , #{startDate}
-            , #{endDate}
+            , TO_DATE(#{startDate}, 'YYYY-MM-DD')
+            , TO_DATE(#{endDate}, 'YYYY-MM-DD')
             , #{memo}
         )
     </insert>
