@@ -12,7 +12,9 @@
             , MEMBER_NO
             , START_DATE
             , END_DATE
-            , MEMO
+            <if test="memo != null">
+                , MEMO
+            </if>
         )
         VALUES
         (
@@ -20,7 +22,9 @@
             , #{memberNo}
             , TO_DATE(#{startDate}, 'YYYY-MM-DD')
             , TO_DATE(#{endDate}, 'YYYY-MM-DD')
-            , #{memo}
+            <if test="memo != null">
+                , #{memo}
+            </if>
         )
     </insert>
 
@@ -29,11 +33,11 @@
         UPDATE BUSINESS_TRIP
         <set>
             <if test="startDate != null">
-                START_DATE = #{startDate} ,
-                END_DATE = #{endDate},
+                START_DATE = TO_DATE(#{startDate}, 'YYYY-MM-DD') ,
+                END_DATE = TO_DATE(#{endDate}, 'YYYY-MM-DD')
             </if>
             <if test="memo != null">
-                MEMO = #{memo}
+                , MEMO = #{memo}
             </if>
         </set>
         WHERE NO = #{no}
@@ -66,8 +70,8 @@
         (
         SEQ_OUTSIDE_WORK_NO.NEXTVAL
         , #{memberNo}
-        , #{startTime}
-        , #{endTime}
+        , TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+        , TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
             <if test=" onsiteStart != null and onsiteStart != '' ">
                 , #{onsiteStart}
             </if>
@@ -82,14 +86,14 @@
         UPDATE OUTSIDE_WORK
         <set>
             <if test="startTime != null">
-                START_TIME = #{startTime},
-                END_TIME = #{endTime},
+                START_TIME = TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS') ,
+                END_TIME = TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
             </if>
             <if test=" onsiteStart != null and onsiteStart != '' ">
-                ONSITE_START = #{onsiteStart},
+                , ONSITE_START = #{onsiteStart}
             </if>
             <if test=" onsiteEnd != null and onsiteEnd != '' ">
-                ONSITE_END = #{onsiteEnd}
+                , ONSITE_END = #{onsiteEnd}
             </if>
         </set>
         WHERE NO = #{no}
@@ -118,8 +122,8 @@
         (
         SEQ_VACATION_NO.NEXTVAL
         , #{memberNo}
-        , #{startDate}
-        , #{endDate}
+        , TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        , TO_DATE(#{endDate}, 'YYYY-MM-DD')
         , #{usedDays}
         , #{halfDayType}
         )
@@ -137,8 +141,8 @@
     <update id="editVacation">
         UPDATE VACATION
         <set>
-            START_DATE = #{startDate},
-            END_DATE = #{endDate},
+            START_DATE = TO_DATE(#{startDate}, 'YYYY-MM-DD'),
+            END_DATE = TO_DATE(#{endDate}, 'YYYY-MM-DD'),
             USED_DAYS = #{usedDays}
             <if test=" halfDayType != null and halfDayType != '' ">
                 HALF_DAY_TYPE = #{halfDayType}
