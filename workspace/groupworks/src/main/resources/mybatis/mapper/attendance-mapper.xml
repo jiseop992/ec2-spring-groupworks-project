@@ -70,8 +70,8 @@
         (
         SEQ_OUTSIDE_WORK_NO.NEXTVAL
         , #{memberNo}
-        , TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
-        , TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+        , TO_TIMESTAMP(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+        , TO_TIMESTAMP(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
             <if test=" onsiteStart != null and onsiteStart != '' ">
                 , #{onsiteStart}
             </if>
@@ -86,8 +86,8 @@
         UPDATE OUTSIDE_WORK
         <set>
             <if test="startTime != null">
-                START_TIME = TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS') ,
-                END_TIME = TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+                START_TIME = TO_TIMESTAMP(#{startTime}, 'YYYY-MM-DD HH24:MI:SS') ,
+                END_TIME = TO_TIMESTAMP(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
             </if>
             <if test=" onsiteStart != null and onsiteStart != '' ">
                 , ONSITE_START = #{onsiteStart}
