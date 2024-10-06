@@ -247,3 +247,12 @@ $RECYCLE.BIN/
 
 config.properties
 
+.idea/ec2-spring-groupworks-project.iml
+
+# 도커 설정파일
+.env
+.dockerignore
+docker-compose.yml
+Dockerfile
+
+workspace/groupworks/logs/*
