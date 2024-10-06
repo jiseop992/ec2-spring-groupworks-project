@@ -11,12 +11,14 @@
 <!-- Root Context: defines shared resources visible to all other web components -->
 
 <!-- commons-dbcp2 > dbcp -->
-<context:property-placeholder location="classpath:config/config.properties"/>
-<bean id="dbcpSource" class="org.apache.commons.dbcp2.BasicDataSource">
-	<property name="driverClassName" value="${dbcpSource.driverClassName}"/>
-	<property name="url" value="${dbcpSource.url}"/>
-	<property name="username" value="${dbcpSource.username}"/>
-	<property name="password" value="${dbcpSource.password}"/>
+<!--<context:property-placeholder location="classpath:config/config.properties"/>-->
+	<context:property-placeholder system-properties-mode="OVERRIDE"/>
+
+	<bean id="dbcpSource" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="${DB_DRIVER_CLASS_NAME}"/>
+	<property name="url" value="${DB_URL}"/>
+	<property name="username" value="${DB_USER_NAME}"/>
+	<property name="password" value="${DB_USER_PWD}"/>
 
 	<property name="maxTotal" value="20"/>
 	<property name="maxIdle" value="10"/>
